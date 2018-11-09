@@ -1,0 +1,68 @@
+###############################################################################
+#  Copyright 2013 - 2018 Software AG, Darmstadt, Germany and/or its licensors
+#
+#   SPDX-License-Identifier: Apache-2.0
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.                                                            
+#
+###############################################################################
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cc
+  labels:
+    app: cc
+spec:
+  type: ClusterIP
+  selector:
+    app: cc
+  ports:
+  - protocol: TCP
+    port: 8091
+    name: https-port
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cc-deployment
+  labels:
+    app: cc
+spec:
+  selector:
+    matchLabels:
+      app: cc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cc
+    spec:
+      hostname: cc
+      containers:
+      - name: cc
+        image: store/softwareag/commandcentral-server:10.3
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8091
+          name: https-port
+        env:
+        # - name: CC_PASSWORD
+        #   value: manage123
+        # envFrom:
+        # - configMapRef:
+        #     name: cc-env-variables
+      imagePullSecrets:
+      - name: regcred
