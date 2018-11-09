@@ -32,25 +32,25 @@ images from Docker Store:
 ```bash
 $ kubectl create secret docker-registry regcred \
     --docker-server=https://index.docker.io/v1/ \
-    --docker-username=<your-name> \
-    --docker-password=<your-pword> \
-    --docker-email=<your-email>
+    --docker-username=<your-docker-login> \
+    --docker-password=<your-docker-password> \
+    --docker-email=<your-docker-email>
 secret "regcred" created
 ```
 
 ### Launch Command Central service
 
-Create Command Central deploymend and service:
+Create Command Central deployment and service:
 
 ```bash
 kubectl create -f sag-cc.yaml
 ```
 
-Verify deployment:
+Verify deployments:
 
 ```bash
 $ kubectl get deployments
-AME                  DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+NAME                  DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 cc-deployment         1         1         1            1           7h
 ```
 
@@ -71,12 +71,12 @@ NAME                                   READY     STATUS    RESTARTS   AGE
 cc-deployment-56f6d448c6-gswcj         1/1       Running   0          7h
 ```
 
-Forward the traffic to the Command Central server port:
+Forward the traffic to the Command Central pod:
 
 > IMPORTANT: the name of the pod will be different. Use the value from the previous command output!
 
 ```bash
-$ port-forward cc-deployment-56f6d448c6-gswcj 8091:8091
+$ kubectl port-forward cc-deployment-56f6d448c6-gswcj 8091:8091
 Forwarding from 127.0.0.1:8091 -> 8091
 ```
 
